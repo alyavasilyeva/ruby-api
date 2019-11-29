@@ -47,7 +47,7 @@ describe UserAuthenticator do
         expect(User.last.name).to eq('John Smith')
       end
 
-      it 'shoud reuse already registered user' do
+      it 'should reuse already registered user' do
         user = create :user, user_data
         expect{ subject }.not_to change{ User.count }
         expect(authenticator.user).to eq(user)

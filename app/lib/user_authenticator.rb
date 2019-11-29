@@ -8,33 +8,34 @@ class UserAuthenticator
   end
 
   def perform
-    if token.try(:error).present?
-      raise AuthenticationError
-    else 
-      prepare_user 
-      @access_token = if user.access_token.present? 
-        user.access_token
-      else 
-        user.create_access_token
-      end
+    raise AuthenticationError if code.blank?
+    raise AuthenticationError if token.try(:error).present?
+
+    prepare_user
+    @access_token = if user.access_token.present?
+      user.access_token
+    else
+      user.create_access_token
     end
   end
 
-  private 
+  private
 
-  def client 
+  def client
     @client ||= Octokit::Client.new(
       client_id: ENV['GITHUB_CLIENT_ID'],
       client_secret: ENV['GITHUB_CLIENT_SECRET']
     )
   end
 
-  def token 
+  def token
     @token ||= client.exchange_code_for_token(code)
-  end 
+  end
 
-  def user_data 
-    @user_data ||= Octokit::Client.new(access_token: token).user.to_h.slice(:login, :avatar_url, :url, :name)
+  def user_data
+    @user_data ||= Octokit::Client.new(
+      access_token: token
+    ).user.to_h.slice(:login, :avatar_url, :url, :name)
   end
 
   def prepare_user
