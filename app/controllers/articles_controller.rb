@@ -30,7 +30,7 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    article = current_user.article.find(params[:id])
+    article = current_user.articles.find(params[:id])
     article.destroy
     head :no_content
   rescue
