@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AccessTokensController, type: :controller do
-  describe '#create' do
+  describe 'POST #create' do
     shared_examples_for "unauthorized_requests" do
       let(:authentication_error) do
         {
@@ -79,31 +79,31 @@ RSpec.describe AccessTokensController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    context 'when invalid request' do
-      let(:authorization_error) do
-        {
-          "status" => "403",
-          "source" => { "pointer" => "/headers/authorization" },
-          "title" =>  "Not authorized",
-          "detail" => "You have not right to access this resource."
-        }
-      end
+    subject { delete :destroy }
 
-      subject { delete :destroy }
+    context 'when no authorization header provided' do
+      it_behaves_like 'forbidden_requests'
+    end
 
-      it 'should return 403 status code' do
-        subject
-        expect(response).to have_http_status(:forbidden)
-      end
-
-      it 'should return a proper error body' do
-        subject
-        expect(json['error']).to eq(authorization_error)
-      end
+    context 'when invalid authorization header provided' do
+      before { request.headers['authorization'] = 'Invalid token' }
+      it_behaves_like 'forbidden_requests'
     end
 
     context 'when valid request' do
-      
+      let(:user) { create :user }
+      let(:access_token) { user.create_access_token }
+
+      before { request.headers['authorization'] = "Bearer #{access_token.token}" }
+
+      it 'should return 204 status code' do
+        subject
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it 'should remove the proper access token' do
+        expect{subject}.to change{ AccessToken.count }.by(-1)
+      end
     end
   end
 end
