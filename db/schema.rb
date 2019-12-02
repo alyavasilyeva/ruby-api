@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_28_085110) do
+ActiveRecord::Schema.define(version: 2019_12_02_181128) do
 
   create_table "access_tokens", force: :cascade do |t|
     t.string "token", null: false
@@ -20,13 +20,8 @@ ActiveRecord::Schema.define(version: 2019_11_28_085110) do
     t.index ["user_id"], name: "index_access_tokens_on_user_id"
   end
 
-  create_table "articles", force: :cascade do |t|
-    t.string "title"
-    t.text "content"
-    t.string "slug"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
+# Could not dump table "articles" because of following StandardError
+#   Unknown type 'reference' for column 'user'
 
   create_table "users", force: :cascade do |t|
     t.string "login", null: false
