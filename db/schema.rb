@@ -20,8 +20,15 @@ ActiveRecord::Schema.define(version: 2019_12_02_181128) do
     t.index ["user_id"], name: "index_access_tokens_on_user_id"
   end
 
-# Could not dump table "articles" because of following StandardError
-#   Unknown type 'reference' for column 'user'
+  create_table "articles", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.string "slug"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_articles_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "login", null: false
@@ -34,4 +41,5 @@ ActiveRecord::Schema.define(version: 2019_12_02_181128) do
   end
 
   add_foreign_key "access_tokens", "users"
+  add_foreign_key "articles", "users"
 end

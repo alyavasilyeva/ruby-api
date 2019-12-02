@@ -1,5 +1,5 @@
 class AddUserToArticles < ActiveRecord::Migration[6.0]
   def change
-    add_column :articles, :user, :reference
+    add_reference :articles, :user, foreign_key: true
   end
 end
