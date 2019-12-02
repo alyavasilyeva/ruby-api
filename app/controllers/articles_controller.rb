@@ -23,6 +23,6 @@ class ArticlesController < ApplicationController
   end
 
   def article_params
-    ApplicationController:Parameters.new
+    ActionController::Parameters.new
   end
 end

@@ -51,8 +51,8 @@ describe ArticlesController do
     end
 
     context 'when authorized' do
-      let(:access_token) { create :access_token}
-      before { request.headers['authorization'] = 'Bearer #{access_token}' }
+      let(:access_token) { create :access_token }
+      before { request.headers['authorization'] = "Bearer #{access_token.token}" }
       context 'when invalid parameters provided' do
         let(:invalid_attributes) do
           {
