@@ -2,30 +2,9 @@ require 'rails_helper'
 
 RSpec.describe AccessTokensController, type: :controller do
   describe 'POST #create' do
-    shared_examples_for "unauthorized_requests" do
-      let(:authentication_error) do
-        {
-          "status" => "401",
-          "source" => { "pointer" => "/code" },
-          "title" =>  "Authentication code is invalid",
-          "detail" => "You must provide valid code in order to exchange it for token."
-        }
-      end
-
-      it 'should return 401 status code' do
-        subject
-        expect(response).to have_http_status(401)
-      end
-
-      it 'should return proper error body' do
-        subject
-        expect(json['errors']).to include(authentication_error)
-      end
-    end
-
-    context 'when no code provided' do
+    context 'when no auth_data provided' do
       subject { post :create }
-      it_behaves_like "unauthorized_requests"
+      it_behaves_like "unauthorized_standard_requests"
     end
 
     context 'when invalid code provided' do
@@ -40,7 +19,7 @@ RSpec.describe AccessTokensController, type: :controller do
 
       subject { post :create, params: { code: 'invalid_code' } }
 
-      it_behaves_like "unauthorized_requests"
+      it_behaves_like "unauthorized_oauth_requests"
     end
 
     context 'when success request' do
